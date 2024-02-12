@@ -9,12 +9,11 @@ plugins {
 
 android {
     namespace = "com.example.lesson6"
-    compileSdk = 31
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.lesson6"
-        minSdk = 21
-        targetSdk = 31
+        minSdk = 26
         versionCode = 1
         versionName = "1.0"
 
@@ -41,13 +40,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.9"
     }
     packaging {
         resources {
