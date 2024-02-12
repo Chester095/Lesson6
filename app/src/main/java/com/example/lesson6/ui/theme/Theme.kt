@@ -1,4 +1,4 @@
-package com.example.lesson6.ui.theme
+package com.example.lesson6.ui.theme // ktlint-disable package-name
 
 import android.app.Activity
 import android.os.Build

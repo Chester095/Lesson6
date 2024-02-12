@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "10710187444",
+    "project_id": "chesterlesson6",
+    "storage_bucket": "chesterlesson6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10710187444:android:8acb5349cd2574a58106e1",
+        "android_client_info": {
+          "package_name": "com.example.lesson6"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALL8iPLKfx398jf0wFAsS3Z9QueLBxS-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
