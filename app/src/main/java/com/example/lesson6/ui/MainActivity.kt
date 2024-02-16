@@ -1,4 +1,4 @@
-package com.example.lesson6 // ktlint-disable filename
+package com.example.lesson6.ui // ktlint-disable filename
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -26,7 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.lesson6.common.SIDE_EFFECTS_KEY
 import com.example.lesson6.ui.components.AddHealthDialogComponent
 import com.example.lesson6.ui.components.EmptyComponent
-import com.example.lesson6.ui.components.ItemColumn
+import com.example.lesson6.ui.components.ItemChoose
 import com.example.lesson6.ui.components.LoadingComponent
 import com.example.lesson6.ui.components.UpdateHealthDialogComponent
 import com.example.lesson6.ui.events.MainActivityUiEvent
@@ -36,6 +36,7 @@ import com.example.lesson6.ui.viewmodel.HealthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -65,10 +66,15 @@ class MainActivity : ComponentActivity() {
             }
 
             Lesson6Theme {
+                Timber.tag("!!!").d("uiState.Lesson6Theme = true")
                 if (uiState.isShowAddHealthDialog) {
+                    Timber.tag("!!!")
+                        .d("uiState.isShowAddHealthDialog = ${uiState.isShowAddHealthDialog}")
                     AddHealthDialogComponent(
                         uiState = uiState,
                         setUpperPressure = { upperPressure ->
+                            Timber.tag("!!!")
+                                .d("uiState.isShowAddHealthDialog upperPressure = $upperPressure")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.OnChangeUpperPressure(
                                     upperPressure = upperPressure
@@ -76,6 +82,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         setLowerPressure = { lowerPressure ->
+                            Timber.tag("!!!").d("lowerPressure = $lowerPressure")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.OnChangeLowerPressure(
                                     lowerPressure = lowerPressure
@@ -83,20 +90,25 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         setPulse = { pulse ->
+                            Timber.tag("!!!").d("pulse = $pulse")
                             healthViewModel.sendEvent(
-                                event = MainActivityUiEvent.OnChangePulse(pulse = pulse)
+                                event = MainActivityUiEvent.OnChangePulse(
+                                    pulse = pulse
+                                )
                             )
                         },
                         saveTask = {
+                            Timber.tag("!!!").d("saveTask = true")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.AddHealths(
+                                    upperPressure = uiState.currentTextFieldUpperPressure,
                                     lowerPressure = uiState.currentTextFieldLowerPressure,
-                                    upperPressure = uiState.currentTextFieldLowerPressure,
                                     pulse = uiState.currentTextFieldPulse
                                 )
                             )
                         },
                         closeDialog = {
+                            Timber.d("closeDialog = true")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.OnChangeAddHealthDialogState(show = false)
                             )
@@ -105,9 +117,12 @@ class MainActivity : ComponentActivity() {
                 }
 
                 if (uiState.isShowUpdateHealthDialog) {
+                    Timber.tag("!!!").d("uiState.isShowUpdateHealthDialog = true")
                     UpdateHealthDialogComponent(
                         uiState = uiState,
                         setUpperPressure = { upperPressure ->
+                            Timber.tag("!!!")
+                                .d("uiState.isShowUpdateHealthDialog upperPressure = ${uiState.isShowAddHealthDialog}")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.OnChangeUpperPressure(
                                     upperPressure = upperPressure
@@ -115,6 +130,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         setLowerPressure = { lowerPressure ->
+                            Timber.tag("!!!").d("lowerPressure = $lowerPressure")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.OnChangeLowerPressure(
                                     lowerPressure = lowerPressure
@@ -122,16 +138,19 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                         setPulse = { pulse ->
+                            Timber.tag("!!!").d("pulse = $pulse")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.OnChangePulse(pulse = pulse)
                             )
                         },
                         saveTask = {
+                            Timber.tag("!!!").d("saveTask = true")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.UpdateNote
                             )
                         },
                         closeDialog = {
+                            Timber.tag("!!!").d("closeDialog = closeDialog")
                             healthViewModel.sendEvent(
                                 event = MainActivityUiEvent.OnChangeUpdateHealthDialogState(show = false)
                             )
@@ -142,6 +161,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     floatingActionButton = {
+                        Timber.tag("!!!").d("floatingActionButton = true")
                         Column {
                             FloatingActionButton(
                                 modifier = Modifier.padding(horizontal = 20.dp),
@@ -149,6 +169,7 @@ class MainActivity : ComponentActivity() {
                                 contentColor = Color.White,
                                 shape = CircleShape,
                                 onClick = {
+                                    Timber.tag("!!!").d("FloatingActionButton.onClick = true")
                                     healthViewModel.sendEvent(
                                         event = MainActivityUiEvent.OnChangeAddHealthDialogState(
                                             show = true
@@ -165,20 +186,27 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     Box(modifier = Modifier.padding(it)) {
+                        Timber.tag("!!!").d("Box = true")
+//                        Timber.tag("!!!").d("uiState.isLoading = ${uiState.isLoading}")
                         when {
                             uiState.isLoading -> {
+                                Timber.tag("!!!").d("uiState.isLoading = true")
                                 LoadingComponent()
                             }
 
                             !uiState.isLoading && uiState.health.isNotEmpty() -> {
+                                Timber.tag("!!!")
+                                    .d("!uiState.isLoading && uiState.health.isNotEmpty() = true")
                                 LazyColumn {
                                     items(uiState.health) { health ->
-                                        ItemColumn(healthModel = health)
+                                        ItemChoose(healthModel = health)
                                     }
                                 }
                             }
 
                             !uiState.isLoading && uiState.health.isEmpty() -> {
+                                Timber.tag("!!!")
+                                    .d("!uiState.isLoading && uiState.health.isEmpty() = true")
                                 EmptyComponent()
                             }
                         }

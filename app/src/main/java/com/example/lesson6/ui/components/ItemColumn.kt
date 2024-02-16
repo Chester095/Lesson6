@@ -3,6 +3,7 @@ package com.example.lesson6.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -27,38 +28,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lesson6.R
+import com.example.lesson6.common.convertDateFormat
+import com.example.lesson6.common.convertDateFormatToDateMonth
+import com.example.lesson6.common.convertDateFormatToYearMonthDate
 import com.example.lesson6.data.model.HealthModel
 import timber.log.Timber
 
 private var lastDate: String = ""
 
-/*@Composable
-fun ItemChoose(healthModel: List<HealthModel>) {
-    if (lastDate != healthModel.createdAt) {
-        lastDate = healthModel.createdAt
+@Composable
+fun ItemChoose(healthModel: HealthModel) {
+    if (lastDate != convertDateFormatToYearMonthDate(healthModel.createdAt)) {
+        lastDate = convertDateFormatToYearMonthDate(healthModel.createdAt)
         ItemDateColumn(healthModel)
         ItemColumn(healthModel)
     } else
         ItemColumn(healthModel)
-}*/
+}
 
 fun healthColor(upperPressure: Int, lowerPressure: Int): Float {
     val upperColorInt = if (upperPressure > 180) 0
     else if (upperPressure < 120) 120
     else 120 - (upperPressure - 120) * 2
-    Timber.tag("!!!").d("upperColorInt = $upperColorInt      upperPressure = $upperPressure")
     val lowerColorInt = (if (lowerPressure > 120) 0
     else if (lowerPressure < 80) 120
     else 120 - (lowerPressure - 80) * 4)
-    Timber
-        .tag("!!!")
-        .d("lowerColorInt = $lowerColorInt      lowerPressure = $lowerPressure")
     val colorFloat = if (upperColorInt < lowerColorInt) upperColorInt
     else lowerColorInt
-    Timber.tag("!!!").d("colorFloat = ${colorFloat}")
     return colorFloat.toFloat()
-
-
 }
 
 @Composable
@@ -84,7 +81,7 @@ fun ItemColumn(healthModel: HealthModel) {
                         healthModel.lowerPressure.toInt()
                     ),
                     1f,
-                    0.6f,
+                    0.7f,
                     0.6f
                 ),
                 Color.White
@@ -110,7 +107,7 @@ fun ItemColumn(healthModel: HealthModel) {
                 Text(
                     fontSize = 16.sp,
                     color = Color.Gray,
-                    text = healthModel.createdAt.toString()
+                    text = convertDateFormat(healthModel.createdAt)
                 )
             }
             Row(
@@ -122,7 +119,7 @@ fun ItemColumn(healthModel: HealthModel) {
             ) {
                 Text(
                     fontSize = 24.sp,
-                    text = healthModel.upperPressure.toString()
+                    text = healthModel.upperPressure
                 )
                 Text(
                     fontSize = 24.sp,
@@ -131,7 +128,7 @@ fun ItemColumn(healthModel: HealthModel) {
                 )
                 Text(
                     fontSize = 24.sp,
-                    text = healthModel.lowerPressure.toString()
+                    text = healthModel.lowerPressure
                 )
             }
             Row(
@@ -151,7 +148,7 @@ fun ItemColumn(healthModel: HealthModel) {
                     modifier = Modifier.padding(start = 8.dp),
                     fontSize = 24.sp,
                     color = Color.Gray,
-                    text = healthModel.pulse.toString()
+                    text = healthModel.pulse
                 )
             }
         }
@@ -162,7 +159,7 @@ fun ItemColumn(healthModel: HealthModel) {
 fun ItemDateColumn(healthModel: HealthModel) {
     Spacer(
         modifier = Modifier
-            .height(1.dp),
+            .border(3.dp, Color.DarkGray),
     )
     Card(
         modifier = Modifier
@@ -183,7 +180,7 @@ fun ItemDateColumn(healthModel: HealthModel) {
             Text(
                 fontSize = 16.sp,
                 color = Color.Gray,
-                text = healthModel.createdAt
+                text = convertDateFormatToDateMonth(healthModel.createdAt)
             )
 
         }

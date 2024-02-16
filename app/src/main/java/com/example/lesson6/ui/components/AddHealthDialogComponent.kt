@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.lesson6.ui.state.MainActivityUiState
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,6 +62,7 @@ fun AddHealthDialogComponent(
                     OutlinedTextField(
                         value = uiState.currentTextFieldUpperPressure,
                         onValueChange = { upperPressure ->
+                            Timber.tag("!!!").d("AddHealthDialogComponent upperPressure = $upperPressure")
                             setUpperPressure(upperPressure)
                         },
                         label = { Text("Верхнее давление") },
@@ -80,6 +82,7 @@ fun AddHealthDialogComponent(
                     OutlinedTextField(
                         value = uiState.currentTextFieldLowerPressure,
                         onValueChange = { lowerPressure ->
+                            Timber.tag("!!!").d("AddHealthDialogComponent lowerPressure = $lowerPressure")
                             setLowerPressure(lowerPressure)
                         },
                         label = { Text("Нижнее давление") },
@@ -99,6 +102,7 @@ fun AddHealthDialogComponent(
                     OutlinedTextField(
                         value = uiState.currentTextFieldPulse,
                         onValueChange = { pulse ->
+                            Timber.tag("!!!").d("pulse = $pulse")
                             setPulse(pulse)
                         },
                         label = { Text("Пульс") },
@@ -121,6 +125,8 @@ fun AddHealthDialogComponent(
                     ) {
                         Button(
                             onClick = {
+                                Timber.tag("!!!").d("Button onClick = true")
+                                Timber.tag("!!!").d("Unit = ${Unit}")
                                 saveTask()
                                 setUpperPressure("")
                                 setLowerPressure("")

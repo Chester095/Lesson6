@@ -3,11 +3,11 @@ package com.example.lesson6.data.repositories
 import com.example.lesson6.common.AppState
 import com.example.lesson6.common.COLLECTION_PATH_NAME
 import com.example.lesson6.common.PLEASE_CHECK_INTERNET_CONNECTION
-import com.example.lesson6.common.convertDateFormat
 import com.example.lesson6.common.getCurrentTimeAsString
 import com.example.lesson6.data.model.HealthModel
 import com.example.lesson6.di.IoDispatcher
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -31,6 +31,7 @@ class HealthRepositoryImpl @Inject constructor(
                     "pulse" to pulse,
                     "createdAt" to getCurrentTimeAsString()
                 )
+                Timber.tag("!!!").d("updateHealth healthUpdate = $health")
 
                 val addHealthTimeout = withTimeoutOrNull(10000L) {
                     appLesson6Db.collection(COLLECTION_PATH_NAME)
@@ -49,7 +50,7 @@ class HealthRepositoryImpl @Inject constructor(
                 AppState.Success(Unit)
             }
         } catch (exception: Exception) {
-            Timber.tag("ERROR: ").d(exception)
+            Timber.tag("!!!").d(exception)
             AppState.Failure(exception = exception)
         }
     }
@@ -59,30 +60,28 @@ class HealthRepositoryImpl @Inject constructor(
             withContext(ioDispatcher) {
                 val fetchingHealthTimeout = withTimeoutOrNull(10000L) {
                     appLesson6Db.collection(COLLECTION_PATH_NAME)
+                        .orderBy("createdAt", Query.Direction.DESCENDING)
                         .get()
                         .await()
                         .documents.map { document ->
                             HealthModel(
                                 healthId = document.id,
+                                createdAt =
+                                document.getString("createdAt") ?: "",
                                 upperPressure = document.getString("upperPressure") ?: "",
                                 lowerPressure = document.getString("lowerPressure") ?: "",
                                 pulse = document.getString("pulse") ?: "",
-                                createdAt = convertDateFormat(
-                                    document.getString("createdAt") ?: "",
-                                ),
                             )
                         }
                 }
                 if (fetchingHealthTimeout == null) {
-                    Timber.tag("ERROR: ").d(PLEASE_CHECK_INTERNET_CONNECTION)
+                    Timber.tag("!!!").d(PLEASE_CHECK_INTERNET_CONNECTION)
                     AppState.Failure(IllegalStateException(PLEASE_CHECK_INTERNET_CONNECTION))
                 }
-
-                Timber.tag("TASKS: ").d("${fetchingHealthTimeout?.toList()}")
                 AppState.Success(fetchingHealthTimeout?.toList() ?: emptyList())
             }
         } catch (exception: Exception) {
-            Timber.tag("ERROR: ").d(exception)
+            Timber.tag("!!!").d(exception)
             AppState.Failure(exception = exception)
         }
     }
@@ -97,13 +96,13 @@ class HealthRepositoryImpl @Inject constructor(
                 }
 
                 if (addTaskTimeout == null) {
-                    Timber.tag("ERROR: ").d(PLEASE_CHECK_INTERNET_CONNECTION)
+                    Timber.tag("!!!").d(PLEASE_CHECK_INTERNET_CONNECTION)
                     AppState.Failure(IllegalStateException(PLEASE_CHECK_INTERNET_CONNECTION))
                 }
                 AppState.Success(Unit)
             }
         } catch (exception: Exception) {
-            Timber.tag("ERROR: ").d(exception)
+            Timber.tag("!!!").d(exception)
             AppState.Failure(exception = exception)
         }
     }
@@ -121,6 +120,7 @@ class HealthRepositoryImpl @Inject constructor(
                     "lowerPressure" to lowerPressure,
                     "pulse" to pulse
                 )
+                Timber.tag("!!!").d("updateHealth healthUpdate = $healthUpdate")
 
                 val addTaskTimeout = withTimeoutOrNull(10000L) {
                     appLesson6Db.collection(COLLECTION_PATH_NAME)
@@ -129,13 +129,13 @@ class HealthRepositoryImpl @Inject constructor(
                 }
 
                 if (addTaskTimeout == null) {
-                    Timber.tag("ERROR: ").d(PLEASE_CHECK_INTERNET_CONNECTION)
+                    Timber.tag("!!!").d(PLEASE_CHECK_INTERNET_CONNECTION)
                     AppState.Failure(IllegalStateException(PLEASE_CHECK_INTERNET_CONNECTION))
                 }
                 AppState.Success(Unit)
             }
         } catch (exception: Exception) {
-            Timber.tag("ERROR: ").d(exception)
+            Timber.tag("!!!").d(exception)
             AppState.Failure(exception = exception)
         }
     }

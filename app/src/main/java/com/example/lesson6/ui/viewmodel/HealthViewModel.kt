@@ -97,14 +97,13 @@ class HealthViewModel @Inject constructor(private val healthRepository: HealthRe
     }
 
     private fun addTask(
+        oldState: MainActivityUiState,
         upperPressure: String,
         lowerPressure: String,
-        pulse: String,
-        oldState: MainActivityUiState
+        pulse: String
     ) {
         viewModelScope.launch {
             setState(oldState.copy(isLoading = true))
-
             when (val result = healthRepository.addHealth(
                 upperPressure = upperPressure,
                 lowerPressure = lowerPressure,
@@ -112,7 +111,6 @@ class HealthViewModel @Inject constructor(private val healthRepository: HealthRe
             )) {
                 is AppState.Failure -> {
                     setState(oldState.copy(isLoading = false))
-
                     val errorMessage =
                         result.exception.message ?: "An error occurred when adding health"
                     setEffect { MainActivitySideEffects.ShowSnackBarMessage(message = errorMessage) }
@@ -132,7 +130,8 @@ class HealthViewModel @Inject constructor(private val healthRepository: HealthRe
 
                     sendEvent(MainActivityUiEvent.GetHealths)
 
-                    setEffect { MainActivitySideEffects.ShowSnackBarMessage(message = "Health added successfully") }
+                    setEffect {
+                        MainActivitySideEffects.ShowSnackBarMessage(message = "Health added successfully") }
                 }
             }
         }

@@ -12,7 +12,20 @@ fun getCurrentTimeAsString(): String {
 
 fun convertDateFormat(dateString: String): String {
     val currentDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    val newDateFormat = SimpleDateFormat("EEEE MMMM yyyy, h:mma", Locale.getDefault())
+    val newDateFormat = SimpleDateFormat("HH:mm", Locale("ru"))
+    val date = currentDateFormat.parse(dateString)
+    return newDateFormat.format(date)
+}
+
+fun convertDateFormatToDateMonth(dateString: String): String {
+    val currentDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val newDateFormat = SimpleDateFormat("dd MMMM", Locale("ru"))
+    val date = currentDateFormat.parse(dateString)
+    return newDateFormat.format(date)
+
+}fun convertDateFormatToYearMonthDate(dateString: String): String {
+    val currentDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    val newDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
     val date = currentDateFormat.parse(dateString)
     return newDateFormat.format(date)
 }
